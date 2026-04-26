@@ -3,27 +3,33 @@ import { addCourse } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const AddCourse = () => {
-  // Lista predefinisanih programerskih kurseva
-  const programerskiKursevi = [
-    "Frontend Development (React)",
-    "Backend Development (Node.js)",
-    "Fullstack JavaScript",
-    "Python for Data Science",
-    "Java Spring Boot Masterclass",
-    "C# i .NET Core",
-    "Mobilne aplikacije (React Native)",
-    "UI/UX Design for Developers",
-    "Osnove algoritama i struktura podataka"
+  // Proširena lista svih programerskih smerova
+  const programerskiSmerovi = [
+    "--- Izaberite program ---",
+    "Frontend Development (React.js & Next.js)",
+    "Backend Development (Node.js & Express)",
+    "Fullstack JavaScript Developer",
+    "Python za Veštačku Inteligenciju (AI)",
+    "Data Science & Machine Learning",
+    "Java Spring Boot Enterprise",
+    "C# i .NET Core Web API",
+    "Razvoj mobilnih aplikacija (React Native)",
+    "Cyber Security & Ethical Hacking",
+    "Game Development (Unity & C#)",
+    "UI/UX Design for Developers"
   ];
 
-  const [title, setTitle] = useState(programerskiKursevi[0]); // Postavljamo prvi kurs kao default
+  // Inicijalno postavljamo prvu opciju
+  const [title, setTitle] = useState(programerskiSmerovi[0]);
   const [instructor, setInstructor] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!instructor) {
-      alert("Molimo unesite ime instruktora.");
+    
+    // Provera da student nije ostavio "Izaberite program"
+    if (title === programerskiSmerovi[0]) {
+      alert("Molimo izaberite konkretan program sa liste.");
       return;
     }
 
@@ -31,52 +37,63 @@ const AddCourse = () => {
       await addCourse({ title, instructor });
       navigate('/'); 
     } catch (error) {
-      console.error("Greška pri čuvanju:", error);
+      console.error("Greška pri upisu:", error);
     }
   };
 
   return (
-    <div className="container" style={{ maxWidth: '500px' }}>
-      <div style={{ background: 'white', padding: '30px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-        <h3 style={{ marginTop: 0, marginBottom: '20px' }}>Prijava novog kursa</h3>
+    <div className="container" style={{ maxWidth: '550px' }}>
+      {/* Kartica prati Glassmorphism stil iz index.css */}
+      <div style={{ 
+        background: 'var(--card-bg)', 
+        padding: '40px', 
+        borderRadius: '12px', 
+        border: '1px solid var(--border)',
+        backdropFilter: 'blur(12px)',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+      }}>
+        <h2 style={{ 
+          marginTop: 0, 
+          marginBottom: '30px', 
+          color: 'var(--accent)', 
+          fontFamily: 'Courier New, monospace',
+          fontSize: '1.4rem'
+        }}>
+          {`> New_Registration.exe`}
+        </h2>
         
         <form onSubmit={handleSubmit}>
-          <label style={{ fontSize: '0.85rem', fontWeight: '600' }}>Izaberite Programerski Kurs</label>
+          <label>PROGRAMSKI SMER</label>
           <select 
             value={title} 
             onChange={(e) => setTitle(e.target.value)}
-            style={{ 
-              width: '100%', 
-              padding: '12px', 
-              margin: '10px 0 20px', 
-              borderRadius: '8px', 
-              border: '2px solid #e2e8f0',
-              fontSize: '1rem',
-              backgroundColor: 'white'
-            }}
+            style={{ marginTop: '10px', marginBottom: '25px' }}
           >
-            {programerskiKursevi.map((kurs, index) => (
-              <option key={index} value={kurs}>
+            {programerskiSmerovi.map((kurs, index) => (
+              <option key={index} value={kurs} style={{background: '#0d1117', color: '#fff'}}>
                 {kurs}
               </option>
             ))}
           </select>
           
-          <label style={{ fontSize: '0.85rem', fontWeight: '600' }}>Instruktor</label>
+          <label>MENTOR / INSTRUKTOR</label>
           <input 
             type="text" 
-            placeholder="Ime i prezime instruktora" 
+            placeholder="Unesite ime mentora" 
             value={instructor} 
             onChange={(e) => setInstructor(e.target.value)} 
             required 
           />
           
-          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-            <button type="submit" className="btn-main">Potvrdi Prijavu</button>
+          <div style={{ display: 'flex', gap: '15px', marginTop: '15px' }}>
+            <button type="submit" className="btn-main" style={{ flex: 2 }}>
+              Potvrdi upis
+            </button>
             <button 
               type="button" 
               onClick={() => navigate('/')} 
-              style={{ background: '#f1f5f9', color: '#1e293b' }}
+              className="btn-logout"
+              style={{ flex: 1, padding: '12px' }}
             >
               Otkaži
             </button>
