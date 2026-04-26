@@ -1,0 +1,14 @@
+{
+  "courses": [
+    {
+      "id": "1",
+      "title": "React za početnike",
+      "instructor": "Sead"
+    },
+    {
+      "id": "2",
+      "title": "Napredni JavaScript",
+      "instructor": "Admin"
+    }
+  ]
+}

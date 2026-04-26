@@ -1,0 +1,155 @@
+:root {
+  /* Moderna Dark paleta sa gradijentom */
+  --bg-top: #0f172a;       
+  --bg-bottom: #020617;    
+  --card-bg: rgba(22, 27, 34, 0.8); /* Stakleni efekat */
+  --accent: #58a6ff;       
+  --text-main: #c9d1d9;    
+  --text-dim: #8b949e;     
+  --border: rgba(48, 54, 61, 0.8);
+  --success: #238636;      
+  --error: #da3633;        
+}
+
+* { box-sizing: border-box; transition: all 0.2s ease; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--text-main);
+  /* Lepša pozadina sa gradijentom i blagim sjajem u uglovima */
+  background: 
+    radial-gradient(circle at top right, rgba(88, 166, 255, 0.05), transparent 400px),
+    radial-gradient(circle at bottom left, rgba(88, 166, 255, 0.05), transparent 400px),
+    linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Header sa blur efektom (staklo) */
+header {
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 2.5rem;
+}
+
+header h2 { 
+  font-family: 'Courier New', monospace; 
+  font-size: 1rem; 
+  color: var(--accent);
+  margin: 0;
+}
+
+/* Grid za manje kartice */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Kartice sa staklenim efektom */
+.course-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
+}
+
+.course-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.course-card h4 {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.course-card p {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+/* Dugmad */
+button {
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.btn-main {
+  background: var(--success);
+  color: white;
+  padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-main:hover { background: #2ea043; }
+
+.btn-logout {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+}
+
+.btn-logout:hover { color: var(--error); border-color: var(--error); }
+
+.edit-button {
+  text-decoration: none;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: 'Courier New', monospace;
+}
+
+.edit-button:hover { background: rgba(88, 166, 255, 0.1); }
+
+/* Forme */
+input, select {
+  width: 100%;
+  background: rgba(13, 17, 23, 0.8);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: 6px;
+  margin: 10px 0 20px;
+  font-family: 'Courier New', monospace;
+}
+
+input:focus { border-color: var(--accent); outline: none; }
+
+/* Mobilna prilagođenost */
+@media (max-width: 600px) {
+  .courses-grid { grid-template-columns: 1fr; }
+  header { flex-direction: column; gap: 15px; text-align: center; }
+  .container { padding: 20px 10px; }
+  input, select, button { font-size: 16px !important; }
+}
