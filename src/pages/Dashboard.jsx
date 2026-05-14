@@ -1,20 +1,41 @@
-import { useCourses } from '../hooks/useCourses';
-import { deleteCourse } from '../services/api';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { courses, loading, refresh } = useCourses();
   const { logout, user } = useAuth();
+  const [localCourses, setLocalCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = async (id) => {
+  // Čitamo podatke direktno iz localStorage čim se stranica učita
+  useEffect(() => {
+    const savedCourses = localStorage.getItem('local_courses');
+    if (savedCourses) {
+      setLocalCourses(JSON.parse(savedCourses));
+    } else {
+      // Ako je memorija prazna (prvi put), postavljamo početna 3 kursa
+      const defaultData = [
+        { id: 1, title: "React za Početnike", instructor: "Petar Petrović", description: "Osnove React frameworka." },
+        { id: 2, title: "Uvod u JavaScript", instructor: "Marko Marković", description: "Savladajte logiku." },
+        { id: 3, title: "HTML i CSS Dizajn", instructor: "Nikola Nikolić", description: "Kreirajte stranice." }
+      ];
+      setLocalCourses(defaultData);
+      localStorage.setItem('local_courses', JSON.stringify(defaultData));
+    }
+    setLoading(false);
+  }, []);
+
+  // Nova funkcija koja TRAJNO briše kurs iz memorije brauzera
+  const handleDelete = (id) => {
     if (window.confirm('Da li ste sigurni da želite ovaj kurs izbrisati?')) {
-      try {
-        await deleteCourse(id);
-        refresh(); 
-      } catch (error) {
-        console.error("Greška pri brisanju:", error);
-      }
+      // 1. Filtriramo listu i izbacujemo odabrani kurs
+      const updatedList = localCourses.filter(course => course.id !== id);
+      
+      // 2. Čuvamo novu, skraćenu listu na ekranu
+      setLocalCourses(updatedList);
+      
+      // 3. ZAKLJUČAVAMO izmenu u localStorage memoriji (ključna stavka!)
+      localStorage.setItem('local_courses', JSON.stringify(updatedList));
     }
   };
 
@@ -38,14 +59,14 @@ const Dashboard = () => {
       </div>
 
       <div className="courses-grid">
-        {courses.length === 0 ? (
+        {localCourses.length === 0 ? (
           <p style={{ color: '#8b949e' }}>// No data found in registry.</p>
         ) : (
-          courses.map(course => (
+          localCourses.map(course => (
             <div key={course.id} className="course-card">
               <div>
-                <h4>{course.title}</h4>
-                <p>{`instructor: "${course.instructor}"`}</p>
+                <h4>{course.title || course.name}</h4>
+                <p>{`instructor: "${course.instructor || 'Nepoznato'}"`}</p>
               </div>
               
               <div className="card-actions">

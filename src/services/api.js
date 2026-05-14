@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-// Pravimo Axios instancu sa portom 5005 koji ti trenutno radi
+// Promenjeno sa 'localhost' na '127.0.0.1' da bismo sprečili IPv6 mrežne greške
 const api = axios.create({
-  baseURL: 'http://localhost:5005' 
+  baseURL: 'http://127.0.0.1:5005' 
 });
 
-// Funkcije za CRUD operacije
+// Funkcije za CRUD operacije koje tvoj React koristi
 export const getCourses = () => api.get('/courses');
 export const addCourse = (courseData) => api.post('/courses', courseData);
 export const deleteCourse = (id) => api.delete(`/courses/${id}`);

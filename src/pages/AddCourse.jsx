@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { addCourse } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const AddCourse = () => {
@@ -24,7 +23,7 @@ const AddCourse = () => {
   const [instructor, setInstructor] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     // Provera da student nije ostavio "Izaberite program"
@@ -33,12 +32,27 @@ const AddCourse = () => {
       return;
     }
 
-    try {
-      await addCourse({ title, instructor });
-      navigate('/'); 
-    } catch (error) {
-      console.error("Greška pri upisu:", error);
-    }
+    // 1. Povlačimo trenutne kurseve iz localStorage memorije
+    const savedCourses = localStorage.getItem('local_courses');
+    let currentCourses = savedCourses ? JSON.parse(savedCourses) : [];
+
+    // 2. Kreiramo novi objekat sa jedinstvenim ID brojem na osnovu vremena (Date.now())
+    const newCourse = {
+      id: Date.now(), 
+      title: title,
+      instructor: instructor,
+      description: "Lokalno dodat program u registar."
+    };
+
+    // 3. Dodajemo novi objekat u niz i snimamo nazad u memoriju brauzera
+    currentCourses.push(newCourse);
+    localStorage.setItem('local_courses', JSON.stringify(currentCourses));
+
+    // Obaveštenje o uspehu
+    alert(`Sistem: Uspešno kreiran program "${title}" kod mentora: ${instructor}`);
+    
+    // Vraćamo korisnika na Dashboard gde će se kartica odmah iscrtati
+    navigate('/'); 
   };
 
   return (

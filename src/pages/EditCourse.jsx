@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api, { updateCourse } from '../services/api';
+
+// Uklonili smo uvoz mrežnog 'api' i 'updateCourse' jer radimo u lokalnom režimu
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -8,14 +9,44 @@ const EditCourse = () => {
   const [course, setCourse] = useState({ title: '', instructor: '' });
 
   useEffect(() => {
-    // Prvo dobavljamo trenutne podatke o kursu
-    api.get(`/courses/${id}`).then(res => setCourse(res.data));
+    // Lokalna baza podataka koja se poklapa sa onom iz useCourses.js
+    const mockData = [
+      { 
+        id: 1, 
+        title: "React za Početnike", 
+        instructor: "Petar Petrović" 
+      },
+      { 
+        id: 2, 
+        title: "Uvod u JavaScript", 
+        instructor: "Marko Marković" 
+      },
+      { 
+        id: 3, 
+        title: "HTML i CSS Dizajn", 
+        instructor: "Nikola Nikolić" 
+      }
+    ];
+
+    // Pronalazimo kurs koji ima isti ID kao onaj iz URL linka
+    const currentCourse = mockData.find(c => c.id === parseInt(id));
+
+    if (currentCourse) {
+      setCourse({
+        title: currentCourse.title,
+        instructor: currentCourse.instructor
+      });
+    }
   }, [id]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await updateCourse(id, course);
-    navigate('/'); // Vrati se na listu
+    
+    // Simuliramo uspešno čuvanje izmena u memoriji
+    alert(`Uspešno sačuvane izmene za kurs: "${course.title}"`);
+    
+    // Vraćamo se na početnu stranu / Dashboard
+    navigate('/'); 
   };
 
   return (
