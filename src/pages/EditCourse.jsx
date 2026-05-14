@@ -1,68 +1,96 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
-// Uklonili smo uvoz mrežnog 'api' i 'updateCourse' jer radimo u lokalnom režimu
+import { useCourses } from '../hooks/useCourses'; // Proverite putanju do vašeg hook-a
 
 const EditCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [course, setCourse] = useState({ title: '', instructor: '' });
+  const { courses, updateCourse } = useCourses();
+
+  // Isti raspored stanja kao u AddCourse
+  const [title, setTitle] = useState('');
+  const [instructor, setInstructor] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  // Proširena lista svih programerskih smerova (identična vašoj)
+  const programerskiSmerovi = [
+    "--- Izaberite program ---",
+    "Frontend Development (React.js & Next.js)",
+    "Backend Development (Node.js & Express)",
+    "Fullstack JavaScript Developer",
+    "Python za Veštačku Inteligenciju (AI)",
+    "Data Science & Machine Learning",
+    "Java Spring Boot Enterprise",
+    "C# i .NET Core Web API",
+    "Razvoj mobilnih aplikacija (React Native)",
+    "Cyber Security & Ethical Hacking",
+    "Game Development (Unity & C#)",
+    "UI/UX Design for Developers"
+  ];
 
   useEffect(() => {
-    // Lokalna baza podataka koja se poklapa sa onom iz useCourses.js
-    const mockData = [
-      { 
-        id: 1, 
-        title: "React za Početnike", 
-        instructor: "Petar Petrović" 
-      },
-      { 
-        id: 2, 
-        title: "Uvod u JavaScript", 
-        instructor: "Marko Marković" 
-      },
-      { 
-        id: 3, 
-        title: "HTML i CSS Dizajn", 
-        instructor: "Nikola Nikolić" 
-      }
-    ];
+    if (!courses || courses.length === 0) return;
 
-    // Pronalazimo kurs koji ima isti ID kao onaj iz URL linka
-    const currentCourse = mockData.find(c => c.id === parseInt(id));
+    // Pronalaženje kursa u pravoj listi pomoću ID-ja iz URL-a
+    const currentCourse = courses.find(c => String(c.id) === String(id));
 
     if (currentCourse) {
-      setCourse({
-        title: currentCourse.title,
-        instructor: currentCourse.instructor
-      });
+      setTitle(currentCourse.title);
+      setInstructor(currentCourse.instructor);
+      setLoading(false);
+    } else {
+      alert(`Kurs sa ID-em "${id}" nije pronađen!`);
+      navigate('/');
     }
-  }, [id]);
+  }, [id, courses, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Simuliramo uspešno čuvanje izmena u memoriji
-    alert(`Uspešno sačuvane izmene za kurs: "${course.title}"`);
-    
-    // Vraćamo se na početnu stranu / Dashboard
-    navigate('/'); 
+
+    // Validacija: Provera da li je izabran smer i da li je unet instruktor
+    if (title === "--- Izaberite program ---" || !title || !instructor.trim()) {
+      alert("Sva polja moraju biti ispravno popunjena!");
+      return;
+    }
+
+    // Ažuriranje preko vašeg hook-a
+    if (typeof updateCourse === 'function') {
+      updateCourse(id, { title, instructor });
+    }
+
+    alert(`Uspešno sačuvane izmene za kurs: "${title}"`);
+    navigate('/');
   };
+
+  if (loading) {
+    return <p style={{ padding: '20px' }}>Učitavanje podataka...</p>;
+  }
 
   return (
     <div style={{ padding: '20px' }}>
       <h2>Izmeni kurs</h2>
       <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          value={course.title} 
-          onChange={(e) => setCourse({...course, title: e.target.value})} 
-        /><br /><br />
-        <input 
-          type="text" 
-          value={course.instructor} 
-          onChange={(e) => setCourse({...course, instructor: e.target.value})} 
-        /><br /><br />
+        <div>
+          <label>Izaberite smer:</label><br />
+          {/* Padajući meni koji automatski selektuje trenutni naziv kursa */}
+          <select value={title} onChange={(e) => setTitle(e.target.value)}>
+            {programerskiSmerovi.map((smer, index) => (
+              <option key={index} value={smer}>
+                {smer}
+              </option>
+            ))}
+          </select>
+        </div>
+        <br />
+        <div>
+          <label>Instruktor:</label><br />
+          <input 
+            type="text" 
+            value={instructor} 
+            onChange={(e) => setInstructor(e.target.value)} 
+          />
+        </div>
+        <br />
         <button type="submit">Sačuvaj izmene</button>
       </form>
     </div>
