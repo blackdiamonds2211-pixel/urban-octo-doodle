@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AddCourse = () => {
-  // Proširena lista svih programerskih smerova
   const programerskiSmerovi = [
     "--- Izaberite program ---",
     "Frontend Development (React.js & Next.js)",
@@ -18,7 +17,6 @@ const AddCourse = () => {
     "UI/UX Design for Developers"
   ];
 
-  // Inicijalno postavljamo prvu opciju
   const [title, setTitle] = useState(programerskiSmerovi[0]);
   const [instructor, setInstructor] = useState('');
   const navigate = useNavigate();
@@ -26,17 +24,14 @@ const AddCourse = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Provera da student nije ostavio "Izaberite program"
     if (title === programerskiSmerovi[0]) {
       alert("Molimo izaberite konkretan program sa liste.");
       return;
     }
 
-    // 1. Povlačimo trenutne kurseve iz localStorage memorije
     const savedCourses = localStorage.getItem('local_courses');
     let currentCourses = savedCourses ? JSON.parse(savedCourses) : [];
 
-    // 2. Kreiramo novi objekat sa jedinstvenim ID brojem na osnovu vremena (Date.now())
     const newCourse = {
       id: Date.now(), 
       title: title,
@@ -44,54 +39,46 @@ const AddCourse = () => {
       description: "Lokalno dodat program u registar."
     };
 
-    // 3. Dodajemo novi objekat u niz i snimamo nazad u memoriju brauzera
     currentCourses.push(newCourse);
     localStorage.setItem('local_courses', JSON.stringify(currentCourses));
 
-    // Obaveštenje o uspehu
     alert(`Sistem: Uspešno kreiran program "${title}" kod mentora: ${instructor}`);
-    
-    // Vraćamo korisnika na Dashboard gde će se kartica odmah iscrtati
     navigate('/'); 
   };
 
   return (
-    <div className="container" style={{ maxWidth: '550px' }}>
-      {/* Kartica prati Glassmorphism stil iz index.css */}
-      <div style={{ 
-        background: 'var(--card-bg)', 
-        padding: '40px', 
-        borderRadius: '12px', 
-        border: '1px solid var(--border)',
-        backdropFilter: 'blur(12px)',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
-      }}>
+    <div className="container" style={{ maxWidth: '550px', display: 'flex', minHeight: '80vh', alignItems: 'center' }}>
+      {/* Kartica prati meki Glassmorphism stil iz index.css */}
+      <div className="course-card" style={{ width: '100%', padding: '40px', minHeight: 'auto' }}>
         <h2 style={{ 
           marginTop: 0, 
           marginBottom: '30px', 
           color: 'var(--accent)', 
-          fontFamily: 'Courier New, monospace',
-          fontSize: '1.4rem'
+          fontFamily: 'monospace',
+          fontSize: '1.3rem'
         }}>
           {`> New_Registration.exe`}
         </h2>
         
         <form onSubmit={handleSubmit}>
-          <label>PROGRAMSKI SMER</label>
+          {/* Rešenje za grešku: labela je sada povezana preko htmlFor i id-ja */}
+          <label htmlFor="add-course-select">PROGRAMSKI SMER</label>
           <select 
+            id="add-course-select"
             value={title} 
             onChange={(e) => setTitle(e.target.value)}
-            style={{ marginTop: '10px', marginBottom: '25px' }}
           >
             {programerskiSmerovi.map((kurs, index) => (
-              <option key={index} value={kurs} style={{background: '#0d1117', color: '#fff'}}>
+              <option key={index} value={kurs} style={{ background: '#0d1117', color: '#fff' }}>
                 {kurs}
               </option>
             ))}
           </select>
           
-          <label>MENTOR / INSTRUKTOR</label>
+          {/* Rešenje za grešku: labela je sada povezana preko htmlFor i id-ja */}
+          <label htmlFor="add-instructor-input">MENTOR / INSTRUKTOR</label>
           <input 
+            id="add-instructor-input"
             type="text" 
             placeholder="Unesite ime mentora" 
             value={instructor} 
@@ -99,7 +86,7 @@ const AddCourse = () => {
             required 
           />
           
-          <div style={{ display: 'flex', gap: '15px', marginTop: '15px' }}>
+          <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
             <button type="submit" className="btn-main" style={{ flex: 2 }}>
               Potvrdi upis
             </button>
@@ -107,7 +94,7 @@ const AddCourse = () => {
               type="button" 
               onClick={() => navigate('/')} 
               className="btn-logout"
-              style={{ flex: 1, padding: '12px' }}
+              style={{ flex: 1 }}
             >
               Otkaži
             </button>

@@ -1,160 +1,154 @@
 :root {
   --bg-top: #0f172a;       
   --bg-bottom: #020617;    
-  --card-bg: rgba(22, 27, 34, 0.95); /* Manja providnost za bolji kontrast */
-  --accent: #58a6ff;       
-  --text-main: #ffffff;    /* Čista bela za maksimalnu vidljivost */
-  --text-dim: #cbd5e1;     /* Svetlija siva za opise */
-  --border: rgba(255, 255, 255, 0.2);
-  --success: #238636;      
-  --error: #f85149;        
+  --card-bg: rgba(15, 23, 42, 0.6); 
+  --accent: #60a5fa;       
+  --text-main: #f8fafc;    
+  --text-dim: #94a3b8;     
+  --border: rgba(255, 255, 255, 0.08);
+  --success: #10b981;      
+  --error: #f43f5e;        
 }
 
-* { box-sizing: border-box; transition: all 0.2s ease; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  color: var(--text-main);
-  background: 
-    radial-gradient(circle at top right, rgba(88, 166, 255, 0.1), transparent 400px),
-    radial-gradient(circle at bottom left, rgba(88, 166, 255, 0.1), transparent 400px),
-    linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
-  background-attachment: fixed;
-  -webkit-font-smoothing: antialiased;
-  font-weight: 500; /* Podebljan osnovni tekst */
+* { 
+  box-sizing: border-box; 
+  transition: background-color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s; 
 }
 
 .container {
-  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px;
 }
 
 header {
-  background: rgba(22, 27, 34, 0.9);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
-  padding: 1.5rem;
+  -webkit-backdrop-filter: blur(12px);
+  padding: 1.25rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   margin-bottom: 2.5rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 header h2 { 
-  font-family: 'Courier New', monospace; 
-  font-size: 1.1rem; 
+  font-family: monospace; 
+  font-size: 1rem; 
   color: var(--accent);
   margin: 0;
-  text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+  letter-spacing: 1px;
 }
 
 .courses-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
 }
 
 .course-card {
   background: var(--card-bg);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.2rem;
+  border-radius: 16px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 160px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  min-height: 180px;
 }
 
 .course-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-color: rgba(96, 165, 250, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .course-card h4 {
   margin: 0;
-  font-family: 'Courier New', monospace;
-  color: #ffffff; /* Čisto bela */
-  font-size: 1.1rem;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .course-card p {
   color: var(--text-dim);
-  font-size: 0.9rem;
-  margin-top: 10px;
-  font-weight: 600; /* Bolja vidljivost instruktora */
+  font-size: 0.88rem;
+  margin-top: 12px;
 }
 
-button {
+button, .edit-button {
   cursor: pointer;
-  border-radius: 6px;
-  font-weight: 700; /* Jako podebljana dugmad */
-  font-size: 0.85rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
   font-family: inherit;
-  letter-spacing: 0.5px;
+  border: none;
+  text-align: center;
 }
 
 .btn-main {
   background: var(--success);
-  color: white;
+  color: #ffffff;
   padding: 12px 24px;
-  border: 1px solid rgba(255,255,255,0.2);
-  box-shadow: 0 2px 10px rgba(35, 134, 54, 0.3);
 }
 
-.btn-main:hover { background: #2ea043; transform: scale(1.02); }
+.btn-main:hover { 
+  background: #059669; 
+  transform: translateY(-1px); 
+}
 
 .btn-logout {
-  background: rgba(248, 81, 73, 0.1);
-  color: #f85149;
-  border: 1px solid #f85149;
-  padding: 8px 16px;
+  background: rgba(244, 63, 94, 0.1);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  padding: 8px 18px;
 }
 
-.btn-logout:hover { background: var(--error); color: white; }
+.btn-logout:hover { 
+  background: var(--error); 
+  color: white; 
+}
 
 .edit-button {
   text-decoration: none;
-  color: #ffffff;
-  background: var(--accent); /* Plava pozadina za bolju uočljivost */
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-family: 'Courier New', monospace;
-  font-weight: 700;
+  background: rgba(96, 165, 250, 0.1);
+  color: var(--accent);
+  padding: 8px 16px;
+  border: 1px solid rgba(96, 165, 250, 0.2);
 }
 
-.edit-button:hover { background: #38bdf8; }
+.edit-button:hover { 
+  background: var(--accent); 
+  color: #020617; 
+}
 
 input, select {
   width: 100%;
-  background: rgba(13, 17, 23, 1);
-  border: 2px solid var(--border);
-  color: #ffffff;
-  padding: 12px;
-  border-radius: 6px;
-  margin: 10px 0 20px;
-  font-family: 'Courier New', monospace;
-  font-size: 1rem;
-  font-weight: 600;
+  background: #090d16; 
+  border: 1px solid var(--border);
+  color: #f8fafc;
+  padding: 14px;
+  border-radius: 10px;
+  margin: 10px 0 24px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
 }
 
-input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px rgba(88, 166, 255, 0.2); }
+input:focus, select:focus { 
+  border-color: var(--accent); 
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15); 
+}
 
 label {
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -162,5 +156,4 @@ label {
 @media (max-width: 600px) {
   .courses-grid { grid-template-columns: 1fr; }
   header { flex-direction: column; gap: 15px; text-align: center; }
-  input, select, button { font-size: 16px !important; }
 }

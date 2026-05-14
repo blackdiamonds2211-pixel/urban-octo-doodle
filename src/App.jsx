@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -6,9 +7,22 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import AddCourse from './pages/AddCourse';
-import EditCourse from './pages/EditCourse'; // 1. Dodat import za Edit stranicu
+import EditCourse from './pages/EditCourse';
 
 function App() {
+  // Kontrolišemo pozadinu tela (body) direktno preko React-a za mekan i prijatan izgled
+  useEffect(() => {
+    document.body.style.margin = "0";
+    document.body.style.minHeight = "100vh";
+    document.body.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    document.body.style.color = "#f8fafc";
+    
+    // Linearni prelaz iz opuštajuće plavo-sive u duboku ponoćnu nijansu pod uglom od 135 stepeni
+    document.body.style.background = "linear-gradient(135deg, #0f172a 0%, #020617 100%)";
+    document.body.style.backgroundAttachment = "fixed";
+    document.body.style.webkitFontSmoothing = "antialiased";
+  }, []);
+
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -35,7 +49,7 @@ function App() {
             } 
           />
 
-          {/* 2. Dodata ruta za izmenu kursa (PUT operacija bonus) */}
+          {/* Ruta za izmenu kursa */}
           <Route 
             path="/edit/:id" 
             element={
