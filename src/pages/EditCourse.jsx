@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useCourses } from '../hooks/useCourses'; // Proverite putanju do vašeg hook-a
+import { useCourses } from '../hooks/useCourses';
 
 const EditCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { courses, updateCourse } = useCourses();
+  const { updateCourse } = useCourses();
 
-  // Isti raspored stanja kao u AddCourse
   const [title, setTitle] = useState('');
   const [instructor, setInstructor] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Proširena lista svih programerskih smerova (identična vašoj)
   const programerskiSmerovi = [
     "--- Izaberite program ---",
     "Frontend Development (React.js & Next.js)",
@@ -29,10 +27,11 @@ const EditCourse = () => {
   ];
 
   useEffect(() => {
-    if (!courses || courses.length === 0) return;
+    // Čitamo iz 'local_courses' baze koju koristi i Dashboard kako bi ID uvek bio pronađen
+    const savedCourses = localStorage.getItem('local_courses');
+    const coursesList = savedCourses ? JSON.parse(savedCourses) : [];
 
-    // Pronalaženje kursa u pravoj listi pomoću ID-ja iz URL-a
-    const currentCourse = courses.find(c => String(c.id) === String(id));
+    const currentCourse = coursesList.find(c => String(c.id) === String(id));
 
     if (currentCourse) {
       setTitle(currentCourse.title);
@@ -42,57 +41,101 @@ const EditCourse = () => {
       alert(`Kurs sa ID-em "${id}" nije pronađen!`);
       navigate('/');
     }
-  }, [id, courses, navigate]);
+  }, [id, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validacija: Provera da li je izabran smer i da li je unet instruktor
     if (title === "--- Izaberite program ---" || !title || !instructor.trim()) {
       alert("Sva polja moraju biti ispravno popunjena!");
       return;
     }
 
-    // Ažuriranje preko vašeg hook-a
+    // Trajno ažuriramo podatak unutar 'local_courses' u localStorage
+    const savedCourses = localStorage.getItem('local_courses');
+    let currentCourses = savedCourses ? JSON.parse(savedCourses) : [];
+
+    const updatedCourses = currentCourses.map(course => {
+      if (String(course.id) === String(id)) {
+        return { ...course, title, instructor };
+      }
+      return course;
+    });
+
+    localStorage.setItem('local_courses', JSON.stringify(updatedCourses));
+
     if (typeof updateCourse === 'function') {
       updateCourse(id, { title, instructor });
     }
 
-    alert(`Uspešno sačuvane izmene za kurs: "${title}"`);
+    alert(`Sistem: Uspešno izmenjen program "${title}"`);
     navigate('/');
   };
 
   if (loading) {
-    return <p style={{ padding: '20px' }}>Učitavanje podataka...</p>;
+    return (
+      <div className="container" style={{ textAlign: 'center' }}>
+        <p style={{ color: 'var(--text-dim)' }}>Učitavanje podataka...</p>
+      </div>
+    );
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Izmeni kurs</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Izaberite smer:</label><br />
-          {/* Padajući meni koji automatski selektuje trenutni naziv kursa */}
-          <select value={title} onChange={(e) => setTitle(e.target.value)}>
+    <div className="container" style={{ maxWidth: '550px', display: 'flex', minHeight: '80vh', alignItems: 'center' }}>
+      {/* Kartica u potpunosti kopira stil, mekoću i prozirnost iz AddCourse */}
+      <div className="course-card" style={{ width: '100%', padding: '40px', minHeight: 'auto' }}>
+        <h2 style={{ 
+          marginTop: 0, 
+          marginBottom: '30px', 
+          color: 'var(--accent)', 
+          fontFamily: 'monospace',
+          fontSize: '1.3rem'
+        }}>
+          {`> Edit_Registration.exe`}
+        </h2>
+        
+        <form onSubmit={handleSubmit}>
+          {/* Fiksirana greška: Labela povezana preko htmlFor i id-ja sa select poljem */}
+          <label htmlFor="edit-course-select">PROGRAMSKI SMER</label>
+          <select 
+            id="edit-course-select"
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)}
+          >
             {programerskiSmerovi.map((smer, index) => (
-              <option key={index} value={smer}>
+              <option key={index} value={smer} style={{ background: '#0d1117', color: '#fff' }}>
                 {smer}
               </option>
             ))}
           </select>
-        </div>
-        <br />
-        <div>
-          <label>Instruktor:</label><br />
+          
+          {/* Fiksirana greška: Labela povezana preko htmlFor i id-ja sa input poljem */}
+          <label htmlFor="edit-instructor-input">MENTOR / INSTRUKTOR</label>
           <input 
+            id="edit-instructor-input"
             type="text" 
+            placeholder="Unesite ime mentora"
             value={instructor} 
             onChange={(e) => setInstructor(e.target.value)} 
+            required
           />
-        </div>
-        <br />
-        <button type="submit">Sačuvaj izmene</button>
-      </form>
+          
+          {/* Simetrična i mekana dugmad, raspoređena u flex odnosu 2:1 kao na AddCourse */}
+          <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
+            <button type="submit" className="btn-main" style={{ flex: 2 }}>
+              Potvrdi izmene
+            </button>
+            <button 
+              type="button" 
+              onClick={() => navigate('/')} 
+              className="btn-logout"
+              style={{ flex: 1 }}
+            >
+              Otkaži
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

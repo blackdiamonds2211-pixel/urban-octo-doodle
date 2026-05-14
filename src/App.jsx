@@ -10,15 +10,19 @@ import AddCourse from './pages/AddCourse';
 import EditCourse from './pages/EditCourse';
 
 function App() {
-  // Kontrolišemo pozadinu tela (body) direktno preko React-a za mekan i prijatan izgled
+  // Kontrolišemo pozadinu preko React-a za dinamičan i luksuzan Sci-Fi ambijent (ne-monoton)
   useEffect(() => {
     document.body.style.margin = "0";
     document.body.style.minHeight = "100vh";
     document.body.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
     document.body.style.color = "#f8fafc";
     
-    // Linearni prelaz iz opuštajuće plavo-sive u duboku ponoćnu nijansu pod uglom od 135 stepeni
-    document.body.style.background = "linear-gradient(135deg, #0f172a 0%, #020617 100%)";
+    // Gornji levi ugao ima meku bordo boju, donji desni duboku ljubičastu, a u sredini je čista mat crna
+    document.body.style.background = `
+      radial-gradient(circle at 10% 20%, rgba(244, 63, 94, 0.05), transparent 500px),
+      radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.04), transparent 500px),
+      linear-gradient(135deg, #160a0f 0%, #030408 50%, #090714 100%)
+    `;
     document.body.style.backgroundAttachment = "fixed";
     document.body.style.webkitFontSmoothing = "antialiased";
   }, []);
